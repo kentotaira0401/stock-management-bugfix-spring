@@ -1,3 +1,4 @@
+
 package jp.co.rakus.stockmanagement.repository;
 
 import jp.co.rakus.stockmanagement.domain.Member;
@@ -53,7 +54,27 @@ public class MemberRepository {
 			return null;
 		}
 	}
-
+	/**
+	 * メールアドレスとパスワードからメンバーを取得.
+	 * @param mailAddress メールアドレス
+	 * @param password パスワード
+	 * @return メンバー情報.メンバーが存在しない場合はnull.
+	 */
+	public Member findByMailAddress(String mailAddress) {
+		SqlParameterSource param = new MapSqlParameterSource();
+		Member member = null;
+		try{
+			member = jdbcTemplate.queryForObject(
+					"SELECT id,name,mail_address,password FROM members WHERE mail_address= '"+ mailAddress +"'",
+					param, 
+					MEMBER_ROW_MAPPER);
+			return member;
+		} catch(DataAccessException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/**
 	 * メンバー情報を保存　または　更新する.
 	 * @param member　保存または更新するメンバー情報

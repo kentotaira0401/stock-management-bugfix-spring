@@ -62,10 +62,20 @@ public class MemberController {
 		if(result.hasErrors()) {
 			return form();
 		}
+		//System.out.println("a");
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
-		memberService.save(member);
-		return "redirect:/";
+		if(memberService.findOneByMailAddress(member.getMailAddress())==null) {
+			//System.out.println("b");
+			memberService.save(member);
+			return "redirect:/";
+		}else {
+			//System.out.println("c");
+			model.addAttribute("errorMessage", "すでに登録されたメールアドレスです");
+			return form();
+		}
+		
+		
 	}
 	
 }
