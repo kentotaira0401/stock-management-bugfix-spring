@@ -8,6 +8,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author igamasayuki
  *
  */
+/**
+ * @author kento
+ *
+ */
 public class MemberForm {
 	/** 名前 */
 	@NotBlank(message="名前は必須です")
@@ -19,6 +23,11 @@ public class MemberForm {
 	/** パスワード */
 	@NotBlank(message="パスは必須です")
 	private String password;
+	/** 確認用パスワード */
+	@NotBlank(message="パスは必須です")
+	private String rePassword;
+	
+	
 	public String getName() {
 		return name;
 	}
@@ -37,4 +46,11 @@ public class MemberForm {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	public String getRePassword() {
+		return rePassword;
+	}
+	public void setRePassword(String rePassword) {
+		this.rePassword = rePassword;
+	}
+	
 }

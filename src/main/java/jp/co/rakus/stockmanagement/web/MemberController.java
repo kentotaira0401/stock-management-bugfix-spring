@@ -65,6 +65,10 @@ public class MemberController {
 		//System.out.println("a");
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
+		if(!(member.getPassword().equals(member.getRePassword()))) {
+			model.addAttribute("errorMessage", "パスワードが合いません");
+			return form();
+		}
 		if(memberService.findOneByMailAddress(member.getMailAddress())==null) {
 			//System.out.println("b");
 			memberService.save(member);
@@ -74,6 +78,7 @@ public class MemberController {
 			model.addAttribute("errorMessage", "すでに登録されたメールアドレスです");
 			return form();
 		}
+		
 		
 		
 	}

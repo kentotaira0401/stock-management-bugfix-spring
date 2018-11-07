@@ -4,6 +4,7 @@ import java.util.List;
 
 import jp.co.rakus.stockmanagement.domain.Book;
 import jp.co.rakus.stockmanagement.service.BookService;
+import jp.co.rakus.stockmanagement.service.MemberService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,9 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 	
+	/*@Autowired
+	private MemberService memberService;*/
+	
 	/**
 	 * フォームを初期化します.
 	 * @return フォーム
@@ -45,6 +49,7 @@ public class BookController {
 	@RequestMapping(value = "list")
 	public String list(Model model) {
 		List<Book> bookList = bookService.findAll();
+		//List<Member> memberList = memberService.findOneByMailAddress(mailAddress)
 		model.addAttribute("bookList", bookList);
 		return "book/list";
 	}
