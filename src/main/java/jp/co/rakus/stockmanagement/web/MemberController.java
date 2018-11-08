@@ -26,6 +26,7 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 
+	
 	/**
 	 * フォームを初期化します.
 	 * @return フォーム
@@ -59,24 +60,37 @@ public class MemberController {
 	@RequestMapping(value = "create")
 	public String create(@Validated MemberForm form,BindingResult result, 
 			Model model) {
-		if(result.hasErrors()) {
-			return form();
-		}
+		
 		//System.out.println("a");
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
+		
+		/*確認用パスワードと合致しなければメンバー情報登録画面に返し下記のエラーメッセージを返す*/
 		if(!(member.getPassword().equals(member.getRePassword()))) {
 			result.rejectValue("password", null , "パスワードが合いません");
-			return form();
+			//return form();
 		}
+		
+		/*メールアドレスがすでに登録されていればメンバー情報登録画面に返し下記のエラーメッセージを表示する*/
 		if(memberService.findOneByMailAddress(member.getMailAddress())!=null) {
 			result.rejectValue("mailAddress", null , "すでに登録されたメールアドレスです");
+			//return form();
+		}
+		if(result.hasErrors()) {
 			return form();
 		}
+		/*ハッシュ化されたパスワードを生成*/
 		
-			memberService.save(member);
+		String digest = memberService.hash(member.getPassword());
+		if(digest!=null) {
+		System.out.println(digest);
+		member.setPassword(digest);
+		memberService.save(member);
 			return "redirect:/";
-		
+		}else {
+			return form();
+		}
+			
 		
 		
 		
