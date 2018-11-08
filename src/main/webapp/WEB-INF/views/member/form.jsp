@@ -19,11 +19,11 @@
 			  </tr>
 			  <tr>
 			    <th>
-				    <c:if test="${errorMessage != null}" >
+				    <%-- <c:if test="${errorMessage != null}" >
 				    	<font color="red"> 
 				    		<c:out value="${errorMessage}" />
 				    	</font> 
-				    </c:if><br>
+				    </c:if> --%><br>
 			      	メールアドレス
 			    </th>
 			    <td>
