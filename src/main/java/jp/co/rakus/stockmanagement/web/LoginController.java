@@ -56,17 +56,35 @@ public class LoginController {
 	@RequestMapping(value = "/login")
 	public String login(@Validated LoginForm form,
 			BindingResult result, Model model) {
+		
 		if (result.hasErrors()){
 			return index();
 		}
+		
 		String mailAddress = form.getMailAddress();
 		String password = form.getPassword();
-		Member member = memberService.findOneByMailAddressAndPassword(mailAddress, password);
+		
+		//メールアドレスから個人を特定し、ハッシュ化されたパスワードを取得
+		Member member = memberService.findOneByMailAddress(mailAddress);
+		
+		//ハッシュ化されたパスワードと入力されたパスワードが合わなければログイン画面に戻す
+		if(memberService.passwordIsMatch(member.getPassword(),password)==null ) {
+			ObjectError error = new ObjectError("loginerror", "パスワードが違います。");
+            result.addError(error);
+			System.out.println("失敗");
+			return index();
+		}
+		
+		member = memberService.findOneByMailAddressAndPassword(mailAddress, member.getPassword());
+		
+		
 		if (member == null) {
 			ObjectError error = new ObjectError("loginerror", "メールアドレスまたはパスワードが違います。");
             result.addError(error);
 			return index();
 		}
+		
+		
 		session.setAttribute("member", member);
 		return "redirect:/book/list";
 	}
