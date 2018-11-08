@@ -66,18 +66,17 @@ public class MemberController {
 		Member member = new Member();
 		BeanUtils.copyProperties(form, member);
 		if(!(member.getPassword().equals(member.getRePassword()))) {
-			model.addAttribute("errorMessage", "パスワードが合いません");
+			result.rejectValue("password", null , "パスワードが合いません");
 			return form();
 		}
-		if(memberService.findOneByMailAddress(member.getMailAddress())==null) {
-			//System.out.println("b");
+		if(memberService.findOneByMailAddress(member.getMailAddress())!=null) {
+			result.rejectValue("mailAddress", null , "すでに登録されたメールアドレスです");
+			return form();
+		}
+		
 			memberService.save(member);
 			return "redirect:/";
-		}else {
-			//System.out.println("c");
-			model.addAttribute("errorMessage", "すでに登録されたメールアドレスです");
-			return form();
-		}
+		
 		
 		
 		
